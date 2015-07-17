@@ -3,7 +3,7 @@
 __author__ = 'xinchun.li'
 __metaclass__ = type
 
-from commons.decorator import to_string, logger
+from common.decorator import to_string, logger
 
 
 ROOT = u'根节点'

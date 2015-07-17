@@ -8,10 +8,10 @@ from flask import Flask
 
 app = Flask(__name__)
 
-from views import hierarchy_view
+from view import hierarchy_view
 app.register_blueprint(hierarchy_view.bp, url_prefix='/hierarchy')
 
-from views import helloworld_view
+from view import helloworld_view
 app.register_blueprint(helloworld_view.bp, url_prefix='')
 
 

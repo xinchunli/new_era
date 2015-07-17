@@ -5,8 +5,8 @@ __metaclass__ = type
 
 from csv import DictReader
 
-from commons.decorator import logger, to_string
-from models.node import Node, ROOT
+from common.decorator import logger, to_string
+from model.node import Node, ROOT
 
 
 class CsvReader(DictReader):

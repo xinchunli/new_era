@@ -5,9 +5,9 @@ __metaclass__ = type
 
 import json
 
-from models.csv_file import CsvReader
-from models.node import ROOT, Node
-from commons.decorator import logger
+from model.csv_file import CsvReader
+from model.node import ROOT, Node
+from common.decorator import logger
 
 
 @logger
