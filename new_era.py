@@ -15,6 +15,12 @@ from view import helloworld_view
 app.register_blueprint(helloworld_view.bp, url_prefix='')
 
 
+from dao import database
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    database.shutdown_session()
+
 if __name__ == '__main__':
+    database.init_db()
     app.debug = True
     app.run()
