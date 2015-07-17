@@ -1,0 +1,23 @@
+<div id="treeview"></div>
+
+<script language="JavaScript">
+    function getTreeData() {
+      var tree = [
+        {
+          text: "Nodes",
+          nodes: [
+            {
+              text: "Node1"
+            },
+            {
+              text: "Node2"
+            }
+          ]
+        }
+      ];
+
+      return tree;
+    }
+    //Initialize Control Tree View
+    $('#treeview').treeview({data: getTreeData()});
+</script>
