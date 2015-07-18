@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+
+{% block title %}会员详情{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    {% include '/hierarchy/member_detail.html' %}
+{% endblock %}

@@ -2,20 +2,53 @@
 
 __author__ = 'xinchun.li'
 
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, request
 from jinja2 import TemplateNotFound
 
 from service import hierarchy_service
+from model.member import Member
 
 
-bp = Blueprint('hierarchy', __name__)
+APP_NAME = 'hierarchy'
+ROOT_PATH = 'hierarchy'
+INDEX = 'index'
+ADD_MEMBER = 'add_member'
+ADD_MEMBER_DO = 'add_member_do'
+bp = Blueprint(APP_NAME, __name__)
 
-@bp.route('/', defaults={'page': 'index'})
-@bp.route('/<page>')
-def index(page):
+
+@bp.route('/')
+@bp.route('/%s' % INDEX)
+def index():
     try:
         json = hierarchy_service.output_node_json()
-        return render_template('hierarchy/%s.html' % page, json=json)
+        return render_template('%s/%s.html' % (ROOT_PATH, INDEX), json=json)
+    except TemplateNotFound:
+        # TODO 将这里的try except放入装饰器中，并打印日志
+        abort(404)
+
+@bp.route('/%s/name/<name>' % ADD_MEMBER)
+def add_member(name):
+    try:
+        member = hierarchy_service.get_member_by_name(name)
+        return render_template('%s/%s.html' % (ROOT_PATH, ADD_MEMBER), name=name, member=member)
+    except TemplateNotFound:
+        # TODO 将这里的try except放入装饰器中，并打印日志
+        abort(404)
+
+
+@bp.route('/%s/' % ADD_MEMBER_DO, methods=['GET', 'POST'])
+def add_member_do():
+    try:
+        if request.method == 'POST':
+            member = Member()
+            member.name = request.form['name']
+            member.card = request.form['card']
+            member.phone = request.form['phone']
+            member.email = request.form['email']
+
+            hierarchy_service.add_member(member)
+        return index()
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)

@@ -1,0 +1,28 @@
+    <div class="row">
+      <div class="col-sm-4">
+
+      </div>
+      <div class="col-sm-4">
+        <hr>
+        <form action="/hierarchy/add_member_do/" method="post">
+          <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ name }}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="card">卡号</label>
+            <input type="text" class="form-control" id="card" name="card" value="{{ member.card }}">
+          </div>
+           <div class="form-group">
+            <label for="phone">电话</label>
+            <input type="tel" class="form-control" id="phone" name="phone" value="{{ member.phone }}">
+          </div>
+          <div class="form-group">
+            <label for="email">邮箱</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ member.email }}">
+          </div>
+          <button type="submit" class="btn btn-default">保存</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="/hierarchy/index">返回</a>
+        </form>
+      </div>
+    </div>

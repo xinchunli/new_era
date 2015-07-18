@@ -4,8 +4,8 @@ __author__ = 'xinchun.li'
 
 from flask import Blueprint
 
-
-bp = Blueprint('helloworld', __name__)
+APP_NAME = 'helloworld'
+bp = Blueprint(APP_NAME, __name__)
 
 @bp.route('/')
 def hello_world():

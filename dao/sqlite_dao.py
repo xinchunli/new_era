@@ -89,15 +89,15 @@ def query_by_id(cls, id):
 
 
 @logger([])
-def query_by_condition(cls, **kwargs):
+def query_by_condition(cls, **condition):
     """
     从数据库中查询条件为指定条件的数据
     :param cls: 数据表对应的类
-    :param kwargs:  查询条件字典
+    :param condition:  查询条件字典
     :return:    符合条件的对象列表
     """
     query_statement = db_session.query(cls)
-    for key, value in kwargs.items():
+    for key, value in condition.items():
         query_statement = query_statement.filter(getattr(cls, key) == value)
     return query_statement.all()
 
