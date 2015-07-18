@@ -25,7 +25,7 @@ class Node:
 
     __repr__ = __str__
 
-    @logger
+    @logger()
     def append_cnodes(self, node):
         self.cnodes.append(node)
 

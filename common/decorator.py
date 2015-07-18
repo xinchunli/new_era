@@ -7,21 +7,31 @@ import datetime
 import sys
 
 
-def logger(func):
-    def _logger(*args, **kwargs):
-        begin_time = datetime.datetime.now()
-        ret = None
-        try:
-            ret = func(*args, **kwargs)
-        except Exception, e:
-            end_time = datetime.datetime.now()
+def logger(default=None):
+    def _logger(func):
+        def __logger(*args, **kwargs):
+            begin_time = datetime.datetime.now()
+            ret = default
             try:
-                logging.error('%s.%s() execute time: %s, error: %s' %
-                              (args[0].__class__, func.__name__, end_time - begin_time, e))
-            except:
-                logging.error('%s.%s() execute time: %s, error: %s' %
-                              (sys.modules[func.__module__], func.__name__, end_time - begin_time, e))
-        return ret
+                ret = func(*args, **kwargs)
+            except Exception, e:
+                end_time = datetime.datetime.now()
+                try:
+                    if args[0].__class__ is type:
+                        class_ = args[0]
+                    else:
+                        class_ = args[0].__class__
+                    logging.error('%s.%s() execute time: %s, error: %s' %
+                                  (class_, func.__name__, end_time - begin_time, e))
+
+                except:
+                    module = sys.modules[func.__module__]
+                    logging.error('%s.%s() execute time: %s, error: %s' %
+                                  (module, func.__name__, end_time - begin_time, e))
+            return ret
+
+        return __logger
+
     return _logger
 
 
@@ -40,4 +50,5 @@ def to_string(func):
             logging.error('%s() to string error! %s' % (func.__name__, e))
 
         return ret
+
     return _to_string

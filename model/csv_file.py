@@ -10,7 +10,7 @@ from model.node import Node, ROOT
 
 
 class CsvReader(DictReader):
-    @logger
+    @logger()
     def __init__(self, f):
         DictReader.__init__(self, f)
         self._node = Node(ROOT, [])

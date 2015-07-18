@@ -10,9 +10,9 @@ from model.node import ROOT, Node
 from common.decorator import logger
 
 
-@logger
+@logger("")
 def output_node_json():
-    with open('D:\\hierarchy.csv1', 'rb') as f:
+    with open('D:\\hierarchy.csv', 'rb') as f:
         reader = CsvReader(f)
         node = reader.get_node()
         if node is None \

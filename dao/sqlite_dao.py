@@ -28,10 +28,9 @@ class MyTransaction:
                 raise exc_sql
         else:
             self.session.rollback()
-            raise exc_type
 
 
-@logger
+@logger(False)
 def add(obj):
     """
 
@@ -43,7 +42,7 @@ def add(obj):
     return transaction.status
 
 
-@logger
+@logger(False)
 def add_all(objs):
     """
 
@@ -56,7 +55,7 @@ def add_all(objs):
     return transaction.status
 
 
-@logger
+@logger(False)
 def delete(obj):
     """
 
@@ -68,7 +67,7 @@ def delete(obj):
     return transaction.status
 
 
-@logger
+@logger([])
 def query_all(cls):
     """
 
@@ -87,4 +86,4 @@ if __name__ == '__main__':
 
     members = query_all(Member)
     print members
-    print 'delete status: ', delete(members[0])
+    # print 'delete status: ', delete(members[0])
