@@ -11,9 +11,9 @@ def logger(default=None):
     def _logger(func):
         def __logger(*args, **kwargs):
             begin_time = datetime.datetime.now()
-            ret = default
+            result = default
             try:
-                ret = func(*args, **kwargs)
+                result = func(*args, **kwargs)
             except Exception, e:
                 end_time = datetime.datetime.now()
                 try:
@@ -21,14 +21,14 @@ def logger(default=None):
                         class_ = args[0]
                     else:
                         class_ = args[0].__class__
-                    logging.error('%s.%s() execute time: %s, error: %s' %
-                                  (class_, func.__name__, end_time - begin_time, e))
+                    logging.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
+                                  (class_, func.__name__, end_time - begin_time, e, args, kwargs))
 
                 except:
                     module = sys.modules[func.__module__]
-                    logging.error('%s.%s() execute time: %s, error: %s' %
-                                  (module, func.__name__, end_time - begin_time, e))
-            return ret
+                    logging.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
+                                  (module, func.__name__, end_time - begin_time, e, args, kwargs))
+            return result
 
         return __logger
 
