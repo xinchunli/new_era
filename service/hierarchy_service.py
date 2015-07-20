@@ -80,8 +80,8 @@ def get_subordinates_count(cnodes):
 def get_member_by_name(name):
     """
     根据会员姓名获取会员
-    :param name:
-    :return:
+    :param name:    会员姓名
+    :return:        会员对象
     """
     return sqlite_dao.query_by_condition(Member, name=name)[0]
 
@@ -90,8 +90,8 @@ def get_member_by_name(name):
 def add_member(member):
     """
     添加会员信息
-    :param member:
-    :return:
+    :param member:  会员对象
+    :return:        成功或失败
     """
     return sqlite_dao.add(member)
 
@@ -100,8 +100,8 @@ def add_member(member):
 def update_member(member):
     """
     更新会员信息
-    :param member:
-    :return:
+    :param member:  会员对象
+    :return:        成功或失败
     """
     return sqlite_dao.update(member)
 
@@ -110,8 +110,8 @@ def update_member(member):
 def add_or_update_member(member):
     """
     若会员不存在则新建会员信息，否则更新会员信息
-    :param member:
-    :return:
+    :param member:  会员对象
+    :return:        成功或失败
     """
     old_member = get_member_by_name(member.name)
     if old_member:
