@@ -43,6 +43,18 @@ def add(obj):
 
 
 @logger(False)
+def update(obj):
+    """
+    将数据库中的一条数据更新为obj对象的属性
+    :param obj:
+    :return:
+    """
+    with MyTransaction(db_session) as transaction:
+        db_session.merge(obj)
+    return transaction.status
+
+
+@logger(False)
 def add_all(objs):
     """
     向数据库中插入多条数据
@@ -50,8 +62,7 @@ def add_all(objs):
     :return:    成功或失败
     """
     with MyTransaction(db_session) as transaction:
-        for obj in objs:
-            db_session(obj)
+        db_session.add_all(objs)
     return transaction.status
 
 
@@ -118,3 +129,7 @@ if __name__ == '__main__':
     members = query_by_condition(Member, name=u'Lee')
     print 'query_by_condition result: ', members
     # print 'delete status: ', delete(members[0])
+
+    member = members[0]
+    member.phone = 11111111111
+    print 'update status: ', update(member)

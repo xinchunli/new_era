@@ -8,8 +8,26 @@ import sys
 
 
 def logger(default=None):
+    """
+
+    :param default: 被装饰的函数默认的返回值
+    :return:
+    """
+
     def _logger(func):
+        """
+
+            :param func:    被装饰的函数
+        :return:
+        """
+
         def __logger(*args, **kwargs):
+            """
+
+            :param args:    被装饰函数的位置参数
+            :param kwargs:  被装饰函数的关键字参数
+            :return:
+            """
             begin_time = datetime.datetime.now()
             result = default
             try:
@@ -36,7 +54,19 @@ def logger(default=None):
 
 
 def to_string(func):
+    """
+
+    :param func:    被装饰的函数
+    :return:
+    """
+
     def _to_string(*args, **kwargs):
+        """
+
+        :param args:    被装饰函数的位置参数
+        :param kwargs:  被装饰函数的关键字参数
+        :return:
+        """
         ret = func(*args, **kwargs)
 
         if not args:

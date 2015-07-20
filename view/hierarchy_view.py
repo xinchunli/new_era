@@ -12,8 +12,8 @@ from model.member import Member
 APP_NAME = 'hierarchy'
 ROOT_PATH = 'hierarchy'
 INDEX = 'index'
-ADD_MEMBER = 'add_member'
-ADD_MEMBER_DO = 'add_member_do'
+SAVE_MEMBER = 'save_member'
+SAVE_MEMBER_DO = 'save_member_do'
 bp = Blueprint(APP_NAME, __name__)
 
 
@@ -27,18 +27,19 @@ def index():
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)
 
-@bp.route('/%s/name/<name>' % ADD_MEMBER)
-def add_member(name):
+
+@bp.route('/%s/name/<name>' % SAVE_MEMBER)
+def save_member(name):
     try:
         member = hierarchy_service.get_member_by_name(name)
-        return render_template('%s/%s.html' % (ROOT_PATH, ADD_MEMBER), name=name, member=member)
+        return render_template('%s/%s.html' % (ROOT_PATH, SAVE_MEMBER), name=name, member=member)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)
 
 
-@bp.route('/%s/' % ADD_MEMBER_DO, methods=['GET', 'POST'])
-def add_member_do():
+@bp.route('/%s/' % SAVE_MEMBER_DO, methods=['GET', 'POST'])
+def save_member_do():
     try:
         if request.method == 'POST':
             member = Member()
@@ -47,7 +48,7 @@ def add_member_do():
             member.phone = request.form['phone']
             member.email = request.form['email']
 
-            hierarchy_service.add_member(member)
+            hierarchy_service.add_or_update_member(member)
         return index()
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
