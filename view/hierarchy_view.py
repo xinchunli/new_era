@@ -14,6 +14,7 @@ ROOT_PATH = 'hierarchy'
 INDEX = 'index'
 SAVE_MEMBER = 'save_member'
 SAVE_MEMBER_DO = 'save_member_do'
+LIST_MEMBER = 'list_member'
 bp = Blueprint(APP_NAME, __name__)
 
 
@@ -50,6 +51,16 @@ def save_member_do():
 
             hierarchy_service.add_or_update_member(member)
         return index()
+    except TemplateNotFound:
+        # TODO 将这里的try except放入装饰器中，并打印日志
+        abort(404)
+
+
+@bp.route('/%s' % LIST_MEMBER)
+def list_member():
+    try:
+        members = hierarchy_service.fetch_all_members()
+        return render_template('%s/%s.html' % (ROOT_PATH, LIST_MEMBER), members=members)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)

@@ -121,6 +121,16 @@ def add_or_update_member(member):
         return add_member(member)
 
 
+@logger([])
+def fetch_all_members():
+    """
+    获取所有会员对象
+
+    :return:    会员对象列表
+    """
+    return sqlite_dao.query_all(Member)
+
+
 if __name__ == '__main__':
     # node = Node(ROOT, ())
     # print print_node(node)
