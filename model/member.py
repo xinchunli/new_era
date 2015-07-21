@@ -1,6 +1,7 @@
 # coding:utf-8
 
 __author__ = 'xinchun.li'
+__metaclass__ = type
 
 from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy.orm import mapper
@@ -9,7 +10,7 @@ from dao.database import metadata
 from common.decorator import to_string
 
 
-class Member(object):
+class Member:
     def __init__(self, name=None, phone=None, card=None, email=None):
         self.name = name
         self.phone = phone

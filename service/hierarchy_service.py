@@ -8,6 +8,7 @@ import json
 from model.csv_file import CsvReader
 from model.node import ROOT, Node
 from model.member import Member
+from model.relation import Relation
 from common.decorator import logger
 from dao import sqlite_dao
 
@@ -32,6 +33,36 @@ def output_node_json():
 
         return json.dumps(dict_['nodes'], indent=2)
 
+
+def load_from_db():
+    pass
+
+
+@logger()
+def load_from_file():
+    with open('D:\\hierarchy.csv', 'rb') as f:
+        reader = CsvReader(f)
+        return reader.get_node()
+
+
+def save_to_db(node, pid):
+    if node is None:
+        return
+
+    relation = Relation(node.text, pid)
+    if not sqlite_dao.add(relation):
+        return
+
+    if not node.cnodes:
+        return
+
+    for cnode in node.cnodes:
+        save_to_db(cnode, relation.id)
+
+
+@logger()
+def save_to_file(node, pid):
+    pass
 
 def _get_json_dict(node):
     """
@@ -131,11 +162,27 @@ def fetch_all_members():
     return sqlite_dao.query_all(Member)
 
 
+@logger([])
+def fetch_all_relations():
+    return sqlite_dao.query_all(Relation)
+
+
 if __name__ == '__main__':
     # node = Node(ROOT, ())
     # print print_node(node)
 
     # print output_node_json()
 
-    print get_member_by_name(u'哈哈')
+    # print get_member_by_name(u'哈哈')
+    node = load_from_file()
+    print node
+
+    sqlite_dao.delete_all(Relation)
+    save_to_db(node, 0)
+
+    relations = fetch_all_relations()
+
+    for relation in relations:
+        print relation.id, relation.name, relation.pid
+
 

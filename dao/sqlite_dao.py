@@ -78,6 +78,20 @@ def delete(obj):
     return transaction.status
 
 
+@logger(False)
+def delete_all(cls):
+    """
+    从数据库中删除一张表所有的数据
+    :param cls: 数据表对应的类
+    :return:    成功或失败
+    """
+    objs = query_all(cls)
+    with MyTransaction(db_session) as transaction:
+        for obj in objs:
+            db_session.delete(obj)
+    return transaction.status
+
+
 @logger([])
 def query_all(cls):
     """
@@ -114,22 +128,29 @@ def query_by_condition(cls, **condition):
 
 
 if __name__ == '__main__':
-    from model.member import Member
-
     init_db()
-    member = Member(u'Lee', 12345678901, 'abcdefg', 'kevin@gmail.com')
-    print 'add status: ', add(member)
 
-    members = query_all(Member)
-    print 'query_all result: ', members
+    # from model.member import Member
+    #
+    # member = Member(u'Lee', 12345678901, 'abcdefg', 'kevin@gmail.com')
+    # print 'add status: ', add(member)
+    #
+    # members = query_all(Member)
+    # print 'query_all result: ', members
+    #
+    # member = query_by_id(Member, 1)
+    # print 'query_by_id result: ', member
+    #
+    # members = query_by_condition(Member, name=u'Lee')
+    # print 'query_by_condition result: ', members
+    # # print 'delete status: ', delete(members[0])
+    #
+    # member = members[0]
+    # member.phone = 11111111111
+    # print 'update status: ', update(member)
 
-    member = query_by_id(Member, 1)
-    print 'query_by_id result: ', member
+    from model.relation import Relation
+    relation = Relation(u'Lee', 0)
+    add(relation)
+    print relation.id
 
-    members = query_by_condition(Member, name=u'Lee')
-    print 'query_by_condition result: ', members
-    # print 'delete status: ', delete(members[0])
-
-    member = members[0]
-    member.phone = 11111111111
-    print 'update status: ', update(member)
