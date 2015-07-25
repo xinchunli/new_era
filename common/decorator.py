@@ -17,7 +17,7 @@ def logger(default=None):
     def _logger(func):
         """
 
-            :param func:    被装饰的函数
+        :param func:    被装饰的函数
         :return:
         """
 
