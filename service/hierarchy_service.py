@@ -10,6 +10,8 @@ from model.node import ROOT, Node
 from model.member import Member
 from model.relation import Relation
 from common.decorator import logger
+from common import config
+from config import constant
 from dao import sqlite_dao
 
 
@@ -20,7 +22,8 @@ def output_node_json():
 
     :return:
     """
-    with open('D:\\hierarchy.csv', 'rb') as f:
+    file_path = config.get(constant.CSV_FILE_FULLPATH)
+    with open(file_path, 'rb') as f:
         reader = CsvReader(f)
         node = reader.get_node()
         if node is None \
@@ -40,7 +43,8 @@ def load_from_db():
 
 @logger()
 def load_from_file():
-    with open('D:\\hierarchy.csv', 'rb') as f:
+    file_path = config.get(constant.CSV_FILE_FULLPATH)
+    with open(file_path, 'rb') as f:
         reader = CsvReader(f)
         return reader.get_node()
 

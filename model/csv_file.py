@@ -119,7 +119,10 @@ class CsvReader(DictReader):
 
 
 if __name__ == '__main__':
-    reader = CsvReader(file('D:\\hierarchy.csv', 'rb'))
+    from common import config
+    from config import constant
+    file_path = config.get(constant.CSV_FILE_FULLPATH)
+    reader = CsvReader(file(file_path, 'rb'))
 
     node = reader.get_node()
     print reader
