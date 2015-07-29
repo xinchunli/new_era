@@ -118,7 +118,9 @@ def get_member_by_name(name):
     :param name:    会员姓名
     :return:        会员对象
     """
-    return sqlite_dao.query_by_condition(Member, name=name)[0]
+    members = sqlite_dao.query_by_condition(Member, name=name)
+    if members:
+        return [0]
 
 
 @logger(False)

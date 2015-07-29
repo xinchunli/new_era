@@ -8,8 +8,9 @@
             <tr>
               <th>序号</th>
               <th>姓名</th>
-              <th>卡号</th>
+              <th>身份证</th>
               <th>电话</th>
+              <th>卡号</th>
               <th>邮箱</th>
               <th>上级</th>
             </tr>
@@ -20,8 +21,9 @@
             <tr>
               <th scope="row">{{ loop.index }}</th>
               <td>{{ member.name }}</td>
-              <td>{{ member.card }}</td>
+              <td>{{ member.id_no }}</td>
               <td>{{ member.phone }}</td>
+              <td>{{ member.card }}</td>
               <td>{{ member.email }}</td>
               <td>-</td>
             </tr>

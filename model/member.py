@@ -11,8 +11,9 @@ from common.decorator import to_string
 
 
 class Member:
-    def __init__(self, name=None, phone=None, card=None, email=None):
+    def __init__(self, name=None, id_no=None, phone=None, card=None, email=None):
         self.name = name
+        self.id_no = id_no
         self.phone = phone
         self.card = card
         self.email = email
@@ -27,6 +28,7 @@ class Member:
 member = Table('member', metadata,
                Column('id', Integer, primary_key=True),
                Column('name', String(50), unique=True),
+               Column('id_no', Integer, unique=True),
                Column('phone', Integer),
                Column('card', String(50)),
                Column('email', String(120)))

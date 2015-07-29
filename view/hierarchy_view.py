@@ -45,6 +45,7 @@ def save_member_do():
         if request.method == 'POST':
             member = Member()
             member.name = request.form['name']
+            member.id_no = request.form['id_no']
             member.card = request.form['card']
             member.phone = request.form['phone']
             member.email = request.form['email']
