@@ -60,8 +60,9 @@ def save_member_do():
 @bp.route('/%s' % LIST_MEMBER)
 def list_member():
     try:
-        members = hierarchy_service.fetch_all_members()
-        return render_template('%s/%s.html' % (ROOT_PATH, LIST_MEMBER), members=members)
+        rel_mem_sup_tuple_list = hierarchy_service.fetch_all_members()
+        return render_template('%s/%s.html' % (ROOT_PATH, LIST_MEMBER),
+                               rel_mem_sup_tuple_list=rel_mem_sup_tuple_list)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)

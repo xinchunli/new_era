@@ -6,7 +6,7 @@ __metaclass__ = type
 import json
 
 from model.csv_file import CsvReader
-from model.node import ROOT, Node
+from model.node import ROOT
 from model.member import Member
 from model.relation import Relation
 from common.decorator import error_log
@@ -49,19 +49,38 @@ def load_from_file():
         return reader.get_node()
 
 
-def save_to_db(node, pid):
-    if node is None:
-        return
+@error_log(False)
+def save_to_db(node):
+    """
 
-    relation = Relation(node.text, pid)
-    if not sqlite_dao.add(relation):
-        return
+    :param node:
+    :return:
+    """
 
-    if not node.cnodes:
-        return
+    def _save_to_db(node, pid):
+        """
 
-    for cnode in node.cnodes:
-        save_to_db(cnode, relation.id)
+        :param node:
+        :param pid:
+        :return:
+        """
+        if node is None:
+            return
+
+        if node.text != ROOT:
+            relation = Relation(node.text, pid)
+            if not sqlite_dao.add(relation):
+                return
+            pid = relation.id
+
+        if not node.cnodes:
+            return
+
+        for cnode in node.cnodes:
+            _save_to_db(cnode, pid)
+    sqlite_dao.delete_all(Relation)
+    _save_to_db(node, 0)
+    return True
 
 
 @error_log()
@@ -163,9 +182,15 @@ def fetch_all_members():
     """
     获取所有会员对象
 
-    :return:    会员对象列表
+    :return:    会员、关系元组列表
     """
-    return sqlite_dao.query_all(Member)
+    rel_mem_tuple_list = sqlite_dao.query_all_left_join(Relation, Member, 'name', 'name')
+    rel_sup_tuple_list = sqlite_dao.query_all_self_join(Relation, Relation, 'pid', 'id')
+
+    relation_list = map(lambda x: x[0], rel_mem_tuple_list)
+    member_list = map(lambda x: x[1], rel_mem_tuple_list)
+    superior_list = map(lambda x: x[1], rel_sup_tuple_list)
+    return zip(relation_list, member_list, superior_list)
 
 
 @error_log([])
@@ -183,12 +208,13 @@ if __name__ == '__main__':
     node = load_from_file()
     print node
 
-    sqlite_dao.delete_all(Relation)
-    save_to_db(node, 0)
+    save_to_db(node)
 
     relations = fetch_all_relations()
 
     for relation in relations:
-        print relation.id, relation.name, relation.pid
+         print relation.id, relation.name, relation.pid
+
+    # print fetch_all_members()
 
 

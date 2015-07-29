@@ -16,16 +16,19 @@
             </tr>
           </thead>
           <tbody>
-          {% if members %}
-            {% for member in members %}
+          {% if rel_mem_sup_tuple_list %}
+            {% for rel_mem_sup_tuple in rel_mem_sup_tuple_list %}
+            {% set relation = rel_mem_sup_tuple[0] %}
+            {% set member = rel_mem_sup_tuple[1] %}
+            {% set superior = rel_mem_sup_tuple[2] %}
             <tr>
               <th scope="row">{{ loop.index }}</th>
-              <td>{{ member.name }}</td>
+              <td>{{ relation.name }}</td>
               <td>{{ member.id_no }}</td>
               <td>{{ member.phone }}</td>
               <td>{{ member.card }}</td>
               <td>{{ member.email }}</td>
-              <td>-</td>
+              <td>{{ superior.name|default('-') }}</td>
             </tr>
             {% endfor %}
           {% endif %}

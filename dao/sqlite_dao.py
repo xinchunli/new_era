@@ -3,6 +3,8 @@
 __author__ = 'xinchun.li'
 __metaclass__ = type
 
+from sqlalchemy.orm import aliased
+
 from dao.database import db_session, init_db
 from common.decorator import error_log
 from common import logger
@@ -137,22 +139,51 @@ def query_by_condition(cls, **condition):
 
 
 @error_log([])
-def query_all_left_join(left_cls, right_cls, left_key=None, right_key=None):
+def query_all_left_join(cls_left, cls_right, key_left=None, key_right=None):
     """
 
-    :param left_cls:
-    :param right_cls:
-    :param left_key:
-    :param right_key:
+    :param cls_left:
+    :param cls_right:
+    :param key_left:
+    :param key_right:
     :return:
     """
-    if left_key and right_key:
-        query_statement = db_session.query(left_cls, right_cls). \
-            outerjoin(right_cls, getattr(left_cls, left_key) == getattr(right_cls, right_key))
+    if key_left and key_right:
+        query_statement = db_session.query(cls_left, cls_right)\
+            .outerjoin(cls_right, getattr(cls_left, key_left) == getattr(cls_right, key_right))\
+            .order_by(cls_left.id)
         sql_logger.debug(query_statement)
         return query_statement.all()
     else:
-        query_statement = db_session.query(left_cls).outerjoin(right_cls)
+        query_statement = db_session.query(cls_left, cls_right)\
+            .outerjoin(cls_right)\
+            .order_by(cls_left.id)
+        sql_logger.debug(query_statement)
+        return query_statement.all()
+
+
+@error_log([])
+def query_all_self_join(cls1, cls2, key1=None, key2=None):
+    """
+
+    :param cls1:
+    :param cls2:
+    :param key1:
+    :param key2:
+    :return:
+    """
+    cls1_alias = aliased(cls1)
+    cls2_alias = aliased(cls2)
+    if key1 and key2:
+        query_statement = db_session.query(cls1_alias, cls2_alias)\
+            .outerjoin(cls2_alias, getattr(cls1_alias, key1) == getattr(cls2_alias, key2))\
+            .order_by(cls1_alias.id)
+        sql_logger.debug(query_statement)
+        return query_statement.all()
+    else:
+        query_statement = db_session.query(cls1_alias, cls2_alias)\
+            .outerjoin(cls2_alias)\
+            .order_by(cls1_alias.id)
         sql_logger.debug(query_statement)
         return query_statement.all()
 
@@ -184,7 +215,10 @@ if __name__ == '__main__':
     # add(relation)
     # print relation.id
 
-    query_list = query_all_left_join(Relation, Member, 'name', 'name')
-    for query in query_list:
-        print query
+    # query_list = query_all_left_join(Relation, Member, 'name', 'name')
+    # for query in query_list:
+    #     print query
+
+    query_list1 = query_all_self_join(Relation, Relation, 'pid', 'id')
+    print query_list1
 
