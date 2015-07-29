@@ -1,5 +1,7 @@
 # coding:utf-8
 
+__author__ = 'xinchun.li'
+
 # pyetc.py
 
 # Python 格式的配置文件支持库
