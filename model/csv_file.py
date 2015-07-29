@@ -5,12 +5,12 @@ __metaclass__ = type
 
 from csv import DictReader
 
-from common.decorator import logger, to_string
+from common.decorator import error_log, to_string
 from model.node import Node, ROOT
 
 
 class CsvReader(DictReader):
-    @logger()
+    @error_log()
     def __init__(self, f):
         DictReader.__init__(self, f)
         self._node = Node(ROOT, [])

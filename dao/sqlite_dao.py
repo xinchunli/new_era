@@ -4,7 +4,11 @@ __author__ = 'xinchun.li'
 __metaclass__ = type
 
 from dao.database import db_session, init_db
-from common.decorator import logger
+from common.decorator import error_log
+from common import logger
+
+
+sql_logger = logger.get_logger(logger.SQL)
 
 
 class MyTransaction:
@@ -30,7 +34,7 @@ class MyTransaction:
             self.session.rollback()
 
 
-@logger(False)
+@error_log(False)
 def add(obj):
     """
     向数据库中插入一条数据
@@ -42,7 +46,7 @@ def add(obj):
     return transaction.status
 
 
-@logger(False)
+@error_log(False)
 def update(obj):
     """
     将数据库中的一条数据更新为obj对象的属性
@@ -54,7 +58,7 @@ def update(obj):
     return transaction.status
 
 
-@logger(False)
+@error_log(False)
 def add_all(objs):
     """
     向数据库中插入多条数据
@@ -66,7 +70,7 @@ def add_all(objs):
     return transaction.status
 
 
-@logger(False)
+@error_log(False)
 def delete(obj):
     """
     从数据库中删除一条数据
@@ -78,7 +82,7 @@ def delete(obj):
     return transaction.status
 
 
-@logger(False)
+@error_log(False)
 def delete_all(cls):
     """
     从数据库中删除一张表所有的数据
@@ -92,17 +96,19 @@ def delete_all(cls):
     return transaction.status
 
 
-@logger([])
+@error_log([])
 def query_all(cls):
     """
     从数据库中查询所有数据
     :param cls: 数据表对应的类
     :return:    符合条件的对象列表
     """
-    return db_session.query(cls).all()
+    query_statement = db_session.query(cls)
+    sql_logger.debug(query_statement)
+    return query_statement.all()
 
 
-@logger()
+@error_log()
 def query_by_id(cls, id):
     """
     从数据库中查询id为指定id的数据
@@ -110,10 +116,12 @@ def query_by_id(cls, id):
     :param id:  数据的id
     :return:    符合条件的对象
     """
-    return db_session.query(cls).filter(cls.id == id).first()
+    query_statement = db_session.query(cls).filter(cls.id == id)
+    sql_logger.debug(query_statement)
+    return query_statement.first()
 
 
-@logger([])
+@error_log([])
 def query_by_condition(cls, **condition):
     """
     从数据库中查询条件为指定条件的数据
@@ -124,13 +132,35 @@ def query_by_condition(cls, **condition):
     query_statement = db_session.query(cls)
     for key, value in condition.items():
         query_statement = query_statement.filter(getattr(cls, key) == value)
+    sql_logger.debug(query_statement)
     return query_statement.all()
+
+
+@error_log([])
+def query_all_left_join(left_cls, right_cls, left_key=None, right_key=None):
+    """
+
+    :param left_cls:
+    :param right_cls:
+    :param left_key:
+    :param right_key:
+    :return:
+    """
+    if left_key and right_key:
+        query_statement = db_session.query(left_cls, right_cls). \
+            outerjoin(right_cls, getattr(left_cls, left_key) == getattr(right_cls, right_key))
+        sql_logger.debug(query_statement)
+        return query_statement.all()
+    else:
+        query_statement = db_session.query(left_cls).outerjoin(right_cls)
+        sql_logger.debug(query_statement)
+        return query_statement.all()
 
 
 if __name__ == '__main__':
     init_db()
 
-    # from model.member import Member
+    from model.member import Member
     #
     # member = Member(u'Lee', 12345678901, 'abcdefg', 'kevin@gmail.com')
     # print 'add status: ', add(member)
@@ -150,7 +180,11 @@ if __name__ == '__main__':
     # print 'update status: ', update(member)
 
     from model.relation import Relation
-    relation = Relation(u'Lee', 0)
-    add(relation)
-    print relation.id
+    # relation = Relation(u'Lee', 0)
+    # add(relation)
+    # print relation.id
+
+    query_list = query_all_left_join(Relation, Member, 'name', 'name')
+    for query in query_list:
+        print query
 

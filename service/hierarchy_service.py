@@ -9,13 +9,13 @@ from model.csv_file import CsvReader
 from model.node import ROOT, Node
 from model.member import Member
 from model.relation import Relation
-from common.decorator import logger
+from common.decorator import error_log
 from common import config
 from config import constant
 from dao import sqlite_dao
 
 
-@logger("")
+@error_log("")
 def output_node_json():
     """
     输出组织结构树需要的json串
@@ -41,7 +41,7 @@ def load_from_db():
     pass
 
 
-@logger()
+@error_log()
 def load_from_file():
     file_path = config.get(constant.CSV_FILE_FULLPATH)
     with open(file_path, 'rb') as f:
@@ -64,7 +64,7 @@ def save_to_db(node, pid):
         save_to_db(cnode, relation.id)
 
 
-@logger()
+@error_log()
 def save_to_file(node, pid):
     pass
 
@@ -91,7 +91,7 @@ def _get_json_dict(node):
     return dict_
 
 
-@logger('')
+@error_log('')
 def gen_detail_url(text):
     """
     获取会员详情页的url
@@ -101,7 +101,7 @@ def gen_detail_url(text):
     return '/hierarchy/save_member/name/%s' % text
 
 
-@logger('0')
+@error_log('0')
 def get_subordinates_count(cnodes):
     """
     获取直属下级的数量
@@ -111,7 +111,7 @@ def get_subordinates_count(cnodes):
     return str(len(cnodes))
 
 
-@logger()
+@error_log()
 def get_member_by_name(name):
     """
     根据会员姓名获取会员
@@ -120,10 +120,10 @@ def get_member_by_name(name):
     """
     members = sqlite_dao.query_by_condition(Member, name=name)
     if members:
-        return [0]
+        return members[0]
 
 
-@logger(False)
+@error_log(False)
 def add_member(member):
     """
     添加会员信息
@@ -133,7 +133,7 @@ def add_member(member):
     return sqlite_dao.add(member)
 
 
-@logger(False)
+@error_log(False)
 def update_member(member):
     """
     更新会员信息
@@ -143,7 +143,7 @@ def update_member(member):
     return sqlite_dao.update(member)
 
 
-@logger(False)
+@error_log(False)
 def add_or_update_member(member):
     """
     若会员不存在则新建会员信息，否则更新会员信息
@@ -158,7 +158,7 @@ def add_or_update_member(member):
         return add_member(member)
 
 
-@logger([])
+@error_log([])
 def fetch_all_members():
     """
     获取所有会员对象
@@ -168,7 +168,7 @@ def fetch_all_members():
     return sqlite_dao.query_all(Member)
 
 
-@logger([])
+@error_log([])
 def fetch_all_relations():
     return sqlite_dao.query_all(Relation)
 

@@ -3,7 +3,7 @@
 __author__ = 'xinchun.li'
 __metaclass__ = type
 
-from common.decorator import to_string, logger
+from common.decorator import to_string, error_log
 
 
 ROOT = u'根节点'
@@ -25,7 +25,7 @@ class Node:
 
     __repr__ = __str__
 
-    @logger()
+    @error_log()
     def append_cnodes(self, node):
         self.cnodes.append(node)
 

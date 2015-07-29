@@ -2,26 +2,29 @@
 
 __author__ = 'xinchun.li'
 
-import logging
 import datetime
 import sys
 
+from common import logger
 
-def logger(default=None):
+error_logger = logger.get_logger(logger.ERROR)
+
+
+def error_log(default=None):
     """
 
     :param default: 被装饰的函数默认的返回值
     :return:
     """
 
-    def _logger(func):
+    def _error_log(func):
         """
 
         :param func:    被装饰的函数
         :return:
         """
 
-        def __logger(*args, **kwargs):
+        def __error_log(*args, **kwargs):
             """
 
             :param args:    被装饰函数的位置参数
@@ -39,18 +42,18 @@ def logger(default=None):
                         class_ = args[0]
                     else:
                         class_ = args[0].__class__
-                    logging.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
+                    error_logger.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
                                   (class_, func.__name__, end_time - begin_time, e, args, kwargs))
 
                 except:
                     module = sys.modules[func.__module__]
-                    logging.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
+                    error_logger.error('%s.%s() execute time: %s, error: %s, args: %s, kwargs: %s' %
                                   (module, func.__name__, end_time - begin_time, e, args, kwargs))
             return result
 
-        return __logger
+        return __error_log
 
-    return _logger
+    return _error_log
 
 
 def to_string(func):
@@ -70,14 +73,14 @@ def to_string(func):
         ret = func(*args, **kwargs)
 
         if not args:
-            logging.error('%s() is not a instance method!' % func.__name__)
+            error_logger.error('%s() is not a instance method!' % func.__name__)
             return ret
 
         try:
             obj = args[0]
             return '%s=%s' % (obj.__class__, obj.__dict__)
         except Exception, e:
-            logging.error('%s() to string error! %s' % (func.__name__, e))
+            error_logger.error('%s() to string error! %s' % (func.__name__, e))
 
         return ret
 
