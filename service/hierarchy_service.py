@@ -6,7 +6,7 @@ __metaclass__ = type
 import json
 
 from model.csv_file import CsvReader
-from model.node import ROOT
+from model.node import ROOT, Node
 from model.member import Member
 from model.relation import Relation
 from common.decorator import error_log
@@ -26,27 +26,49 @@ def output_node_json():
 
     :return:
     """
-    file_path = config.get(constant.CSV_FILE_FULLPATH)
-    with open(file_path, 'rb') as f:
-        reader = CsvReader(f)
-        node = reader.get_node()
-        if node is None \
-                or node.text != ROOT:
-            return ""
+    # 从数据库中获取结构关系
+    node = load_from_db()
+    diagnose_logger.info("load_from_db")
+    if node is None:
+        # 从csv文件中获取结构关系
+        node = load_from_file()
+        diagnose_logger.info("load_from_file")
+    if node is None \
+            or node.text != ROOT:
+        return ""
 
-        dict_ = _get_json_dict(node)
-        if not dict_:
-            return ""
+    dict_ = _get_json_dict(node)
+    if not dict_:
+        return ""
 
-        return json.dumps(dict_['nodes'], indent=2)
+    return json.dumps(dict_['nodes'], indent=2)
 
 
+@error_log()
 def load_from_db():
-    pass
+    """
+    从数据库中获取结构关系
+
+    :return:
+    """
+    relations = fetch_all_relations()
+    rnode = Node(ROOT, [])
+    for relation in relations:
+        superior = get_superior(relation)
+        pnode = get_pnode(superior, rnode)
+        if pnode:
+            cnode = Node(relation.name, [])
+            pnode.append_cnodes(cnode)
+    return rnode
 
 
 @error_log()
 def load_from_file():
+    """
+    从csv文件中获取结构关系
+
+    :return:
+    """
     file_path = config.get(constant.CSV_FILE_FULLPATH)
     diagnose_logger.info('file_path=' + file_path)
     with open(file_path, 'rb') as f:
@@ -83,6 +105,7 @@ def save_to_db(node):
 
         for cnode in node.cnodes:
             _save_to_db(cnode, pid)
+
     sqlite_dao.delete_all(Relation)
     _save_to_db(node, 0)
     return True
@@ -203,6 +226,32 @@ def fetch_all_relations():
     return sqlite_dao.query_all(Relation)
 
 
+@error_log()
+def get_superior(relation):
+    pid = relation.pid
+    if pid == 0:
+        return Relation(ROOT, -1)
+
+    relations = sqlite_dao.query_by_condition(Relation, id=pid)
+    if relations:
+        return relations[0]
+
+
+@error_log()
+def get_pnode(superior, node):
+    if superior is None \
+            or node is None:
+        return None
+
+    if node.text == superior.name:
+        return node
+
+    for cnode in node.cnodes:
+        pnode = get_pnode(superior, cnode)
+        if pnode:
+            return pnode
+
+
 if __name__ == '__main__':
     # node = Node(ROOT, ())
     # print print_node(node)
@@ -210,16 +259,19 @@ if __name__ == '__main__':
     # print output_node_json()
 
     # print get_member_by_name(u'哈哈')
-    node = load_from_file()
-    print node
-
-    save_to_db(node)
-
-    relations = fetch_all_relations()
-
-    for relation in relations:
-         print relation.id, relation.name, relation.pid
+    # node = load_from_file()
+    # print node
+    #
+    # save_to_db(node)
+    #
+    # relations = fetch_all_relations()
+    #
+    # for relation in relations:
+    #     print relation.id, relation.name, relation.pid
 
     # print fetch_all_members()
+
+    print load_from_db()
+    print load_from_file()
 
 
