@@ -141,12 +141,12 @@ def query_by_condition(cls, **condition):
 @error_log([])
 def query_all_left_join(cls_left, cls_right, key_left=None, key_right=None):
     """
-
-    :param cls_left:
-    :param cls_right:
-    :param key_left:
-    :param key_right:
-    :return:
+    左外连接两张表，获取两张表连接后的集合
+    :param cls_left:    左表对应的类
+    :param cls_right:   右表对应的类
+    :param key_left:    左表连接的列名，为空时默认连接id
+    :param key_right:   右表连接的列名，为空时默认连接id
+    :return:    两个类的对象元组列表，例[(obj_left1, obj_right1), (obj_left2, obj_right2), (...), ...]
     """
     if key_left and key_right:
         query_statement = db_session.query(cls_left, cls_right)\
@@ -165,12 +165,12 @@ def query_all_left_join(cls_left, cls_right, key_left=None, key_right=None):
 @error_log([])
 def query_all_self_join(cls1, cls2, key1=None, key2=None):
     """
-
-    :param cls1:
-    :param cls2:
-    :param key1:
-    :param key2:
-    :return:
+    自连接一张表，获取该表自连接后的集合
+    :param cls1:    该表对应的类
+    :param cls2:    该表对应的类
+    :param key1:    表1连接的列名，为空时默认连接id
+    :param key2:    表2连接的列名，为空时默认连接id
+    :return:    两个类的对象元组列表，例[(obj1_1, obj2_1), (obj1_2, obj2_2), (...), ...]
     """
     cls1_alias = aliased(cls1)
     cls2_alias = aliased(cls2)

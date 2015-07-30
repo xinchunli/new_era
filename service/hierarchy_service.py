@@ -11,8 +11,12 @@ from model.member import Member
 from model.relation import Relation
 from common.decorator import error_log
 from common import config
+from common import logger
 from config import constant
 from dao import sqlite_dao
+
+
+diagnose_logger = logger.get_logger(logger.DIAGNOSE)
 
 
 @error_log("")
@@ -44,6 +48,7 @@ def load_from_db():
 @error_log()
 def load_from_file():
     file_path = config.get(constant.CSV_FILE_FULLPATH)
+    diagnose_logger.info('file_path=' + file_path)
     with open(file_path, 'rb') as f:
         reader = CsvReader(f)
         return reader.get_node()

@@ -8,6 +8,7 @@ import logging.config
 
 ROOT = 'root'
 ERROR = 'error'
+DIAGNOSE = 'diagnose'
 SQL = 'sql'
 
 logging.config.fileConfig(r'D:\workspace\python-workspace\new_era\config\logger.conf')
