@@ -13,6 +13,7 @@
               <th>卡号</th>
               <th>邮箱</th>
               <th>上级</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -29,6 +30,7 @@
               <td>{{ member.card }}</td>
               <td>{{ member.email }}</td>
               <td>{{ superior.name|default('-') }}</td>
+              <td><a href="/hierarchy/save_member/name/{{ relation.name }}/source/list_member">修改</a></td>
             </tr>
             {% endfor %}
           {% endif %}

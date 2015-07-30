@@ -29,18 +29,19 @@ def index():
         abort(404)
 
 
-@bp.route('/%s/name/<name>' % SAVE_MEMBER)
-def save_member(name):
+@bp.route('/%s/name/<name>/source/<source>' % SAVE_MEMBER)
+def save_member(name, source):
     try:
         member = hierarchy_service.get_member_by_name(name)
-        return render_template('%s/%s.html' % (ROOT_PATH, SAVE_MEMBER), name=name, member=member)
+        return render_template('%s/%s.html' % (ROOT_PATH, SAVE_MEMBER),
+                               name=name, member=member, source=source)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)
 
 
-@bp.route('/%s/' % SAVE_MEMBER_DO, methods=['GET', 'POST'])
-def save_member_do():
+@bp.route('/%s/source/<source>' % SAVE_MEMBER_DO, methods=['GET', 'POST'])
+def save_member_do(source):
     try:
         if request.method == 'POST':
             member = Member()
@@ -51,7 +52,10 @@ def save_member_do():
             member.email = request.form['email']
 
             hierarchy_service.add_or_update_member(member)
-        return index()
+        if source == LIST_MEMBER:
+            return list_member()
+        else:
+            return index()
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)

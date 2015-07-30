@@ -122,7 +122,7 @@ def gen_detail_url(text):
     :param text:
     :return:
     """
-    return '/hierarchy/save_member/name/%s' % text
+    return '/hierarchy/save_member/name/%s/source/index' % text
 
 
 @error_log('0')
