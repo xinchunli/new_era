@@ -9,7 +9,7 @@ from flask import Flask
 app = Flask(__name__)
 
 from view import hierarchy_view
-app.register_blueprint(hierarchy_view.bp, url_prefix='/hierarchy')
+app.register_blueprint(hierarchy_view.bp, url_prefix='/%s' % hierarchy_view.ROOT_PATH)
 
 from view import helloworld_view
 app.register_blueprint(helloworld_view.bp, url_prefix='')
