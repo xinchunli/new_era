@@ -23,7 +23,7 @@ bp = Blueprint(APP_NAME, __name__)
 def index():
     try:
         json = hierarchy_service.output_node_json()
-        return render_template('%s/%s.html' % (ROOT_PATH, INDEX), json=json)
+        return render_template('%s/%s.html' % (ROOT_PATH, INDEX), id=2, json=json)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)
@@ -66,7 +66,7 @@ def list_member():
     try:
         rel_mem_sup_tuple_list = hierarchy_service.fetch_all_members()
         return render_template('%s/%s.html' % (ROOT_PATH, LIST_MEMBER),
-                               rel_mem_sup_tuple_list=rel_mem_sup_tuple_list)
+                               id=3, rel_mem_sup_tuple_list=rel_mem_sup_tuple_list)
     except TemplateNotFound:
         # TODO 将这里的try except放入装饰器中，并打印日志
         abort(404)

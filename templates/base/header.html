@@ -1,0 +1,11 @@
+    <ul class="nav nav-pills">
+      <li id="main" role="presentation" {% if id == 1 %}class="active"{% endif %}>
+        <a href="/">首页</a>
+      </li>
+      <li id="hierarchy" role="presentation" {% if id == 2 %}class="active"{% endif %}>
+        <a href="/hierarchy">组织结构</a>
+      </li>
+      <li id="list_member" role="presentation" {% if id == 3 %}class="active"{% endif %}>
+        <a href="/hierarchy/list_member">会员列表</a>
+      </li>
+    </ul>
