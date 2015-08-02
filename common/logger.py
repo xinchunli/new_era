@@ -11,7 +11,7 @@ ERROR = 'error'
 DIAGNOSE = 'diagnose'
 SQL = 'sql'
 
-logging.config.fileConfig(r'D:\workspace\python-workspace\new_era\config\logger.conf')
+logging.config.fileConfig(r'D:\new_era\config\logger.conf')
 
 
 def get_logger(name=None):

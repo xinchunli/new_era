@@ -5,7 +5,7 @@ __author__ = 'xinchun.li'
 import pyetc
 
 
-conf = pyetc.load(r'D:\workspace\python-workspace\new_era\config\tech.conf')
+conf = pyetc.load(r'D:\new_era\config\tech.conf')
 
 
 def get(name, default=None):
