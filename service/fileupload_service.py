@@ -23,12 +23,22 @@ diagnose.info("allowed_extensions=" + str(ALLOWED_EXTENSIONS))
 
 @error_log(False)
 def allowed_file(filename):
+    """
+
+    :param filename:
+    :return:
+    """
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 @error_log(False)
 def upload_file(file_):
+    """
+
+    :param file_:
+    :return:
+    """
     if file_ and allowed_file(file_.filename):
         # filename = secure_filename(file_.filename)
         file_.save(os.path.join(UPLOAD_FOLDER, UPLOAD_NAME))

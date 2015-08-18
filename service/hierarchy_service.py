@@ -115,6 +115,7 @@ def save_to_db(node):
 def save_to_file(node, pid):
     pass
 
+
 def _get_json_dict(node):
     """
     递归循环node对象的cnodes列表，构造json串的nodes节点
