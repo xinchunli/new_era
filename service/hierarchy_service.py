@@ -29,7 +29,8 @@ def output_node_json():
     # 从数据库中获取结构关系
     node = load_from_db()
     diagnose_logger.info("load_from_db")
-    if node is None:
+    if node is None \
+            or not node.cnodes:
         # 从csv文件中获取结构关系
         node = load_from_file()
         diagnose_logger.info("load_from_file")

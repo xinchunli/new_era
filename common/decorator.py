@@ -43,12 +43,12 @@ def error_log(default=None):
                     else:
                         class_ = args[0].__class__
                     error_logger.error('%s.%s() execute error: %s, time: %s, args: %s, kwargs: %s' %
-                                       (class_, func.__name__, e, end_time - begin_time, args, kwargs))
+                                       (class_.__name__, func.__name__, e, end_time - begin_time, args, kwargs))
 
                 except:
                     module = sys.modules[func.__module__]
                     error_logger.error('%s.%s() execute error: %s, time: %s, args: %s, kwargs: %s' %
-                                       (module, func.__name__, e, end_time - begin_time, args, kwargs))
+                                       (module.__name__, func.__name__, e, end_time - begin_time, args, kwargs))
             return result
 
         return __error_log
