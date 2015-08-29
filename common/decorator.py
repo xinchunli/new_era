@@ -32,9 +32,8 @@ def error_log(default=None):
             :return:
             """
             begin_time = datetime.datetime.now()
-            result = default
             try:
-                result = func(*args, **kwargs)
+                return func(*args, **kwargs)
             except Exception, e:
                 end_time = datetime.datetime.now()
                 try:
@@ -49,7 +48,7 @@ def error_log(default=None):
                     module = sys.modules[func.__module__]
                     error_logger.error('%s.%s() execute error: %s, time: %s, args: %s, kwargs: %s' %
                                        (module.__name__, func.__name__, e, end_time - begin_time, args, kwargs))
-            return result
+            return default
 
         return __error_log
 
